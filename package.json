@@ -1,0 +1,63 @@
+{
+  "name": "car-rental-system",
+  "version": "1.0.0",
+  "description": "Car Rental System that manages vehicles, rentals, customers, and payments. Supports guest and registered users, tracks personal identification, pricing, and discounts to handle the full car rental process.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/app.js",
+    "dev": "tsx watch src/app.ts",
+    "build": "tsc",
+    "db:up": "docker-compose up -d db",
+    "db:down": "docker-compose down db",
+    "db:init": "tsx src/db/init.js",
+    "db:migrate": "tsx src/db/migrate.js",
+    "db:seed": "tsx src/db/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "car",
+    "rental",
+    "car-rental",
+    "vehicle",
+    "booking",
+    "reservation",
+    "rent-a-car",
+    "customers",
+    "payments",
+    "maintenance",
+    "fleet",
+    "management",
+    "rental-system",
+    "rental-service"
+  ],
+  "author": "Antony Chan",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "js-yaml": "^4.1.0",
+    "morgan": "^1.10.1",
+    "pg": "^8.16.3",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/js-yaml": "^4.0.9",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.3.1",
+    "@types/pg": "^8.15.5",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "cross-env": "^10.0.0",
+    "eslint": "^9.35.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "nodemon": "^3.1.10",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
+  }
+}

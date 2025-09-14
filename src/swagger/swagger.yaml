@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  title: Car Rental System
+  description: >
+    Car Rental System that manages vehicles, rentals, customers, and payments.
+    Supports guest and registered users, tracks personal identification,
+    pricing, and discounts to handle the full car rental process.
+  version: "1.0.0"
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+components:
+  schemas:
+
+paths:
