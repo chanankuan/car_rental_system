@@ -79,7 +79,7 @@ BEGIN
         ('confirmed'),
         ('in progress'),
         ('completed'),
-        ('cancelled')
+        ('cancelled');
 
     -- Locations (Warsaw)
     INSERT INTO locations(id, name, street, building_number, postal_code, city)
