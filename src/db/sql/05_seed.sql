@@ -8,6 +8,7 @@ DECLARE
     -- Fuel types
     fuelPetrolId         UUID := uuid_generate_v4();
     fuelDieselId         UUID := uuid_generate_v4();
+    fuelHybridId         UUID := uuid_generate_v4();
     fuelElectricId       UUID := uuid_generate_v4();
 
     -- Transmission types
@@ -56,7 +57,7 @@ BEGIN
     VALUES
         (fuelPetrolId, 'petrol'),
         (fuelDieselId, 'diesel'),
-        (fuelDieselId, 'hybrid'),
+        (fuelHybridId, 'hybrid'),
         (fuelElectricId, 'electric');
 
     -- Transmission types
