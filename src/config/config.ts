@@ -19,10 +19,7 @@ export const config: Config = {
   nodeEnv: process.env.NODE_ENV || "production",
   sessionSecret: process.env.SESSION_SECRET!,
   redisUrl: process.env.REDIS_URL!,
-  postgresHost:
-    process.env.NODE_ENV === "development"
-      ? "localhost"
-      : process.env.POSTGRES_HOST!,
+  postgresHost: process.env.POSTGRES_HOST!,
   postgresPort: Number(process.env.POSTGRES_PORT || 5432),
   postgresUser: process.env.POSTGRES_USER || "",
   postgresPassword: process.env.POSTGRES_PASSWORD || "",
