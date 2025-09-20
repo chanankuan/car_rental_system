@@ -10,7 +10,291 @@ servers:
   - url: http://localhost:3000
     description: Local development server
 
+tags:
+  - name: Auth
+    description: Endpoints for registration, login, logout, and password changes
+  - name: Users
+    description: Endpoints for retrieving and updating user information
+
 components:
   schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "48c275f5-383e-4dea-bd0e-a7e49dab0866"
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: john.doe@example.com
+        phoneNumber:
+          type: string
+          example: "+1234567890"
+        isVerified:
+          type: boolean
+          example: true
+        role:
+          type: string
+          example: user
+    BadRequestException:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: BadRequest
+        message:
+          type: string
+          example: Bad request
+    UnauthorizedException:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 401
+        error:
+          type: string
+          example: Unauthorized
+        message:
+          type: string
+          example: Unauthorized
+    ForbiddenException:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 403
+        error:
+          type: string
+          example: Forbidden
+        message:
+          type: string
+          example: Forbidden
+    NotFoundException:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+        error:
+          type: string
+          example: NotFound
+        message:
+          type: string
+          example: Not Found
+    ConflictException:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 409
+        error:
+          type: string
+          example: Conflict
+        message:
+          type: string
+          example: An account with these details already exists
+    InternalServerError:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 500
+        error:
+          type: string
+          example: InternalServerError
+        message:
+          type: string
+          example: Server error
+    BadRequestValidation:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: BadRequest
+        message:
+          type: string
+          example:
+            Password must include uppercase, lowercase, number, and special
+            character
+    InvalidCredentials:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 401
+        error:
+          type: string
+          example: Unauthorized
+        message:
+          type: string
+          example: Invalid credentials
 
 paths:
+  /api/auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [firstName, lastName, email, phoneNumber, password]
+              properties:
+                firstName:
+                  type: string
+                  example: John
+                lastName:
+                  type: string
+                  example: Doe
+                email:
+                  type: string
+                  pattern: '^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$'
+                  example: john.doe@example.com
+                phoneNumber:
+                  type: string
+                  example: "+1234567890"
+                password:
+                  type: string
+                  minLength: 8
+                  pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"
+                  example: "StrongPass123!"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Validation unsuccessful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestValidation"
+        "409":
+          description: Conflict – Email or phone already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConflictException"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Log in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  example: StrongPass123!
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidCredentials"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /api/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Log out the current user
+      responses:
+        "204":
+          description: Logout successful, no content
+        "401":
+          description: Unauthorized – No active session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedException"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /api/auth/change-password:
+    patch:
+      tags: [Auth]
+      summary: Change password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [oldPassword, newPassword]
+              properties:
+                oldPassword:
+                  type: string
+                  minLength: 8
+                  example: "OldStrongPass123!"
+                newPassword:
+                  type: string
+                  minLength: 8
+                  pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"
+                  example: "NewStrongPass456!"
+      responses:
+        "204":
+          description: Password changed successfully, no content
+        "400":
+          description: Validation unsuccessful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestValidation"
+        "401":
+          description: Unauthorized – Not logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedException"
