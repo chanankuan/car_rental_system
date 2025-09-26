@@ -15,6 +15,8 @@ tags:
     description: Endpoints for registration, login, logout, and password changes
   - name: Users
     description: Endpoints for retrieving and updating user information
+  - name: Cars
+    description: Endpoints for listing and retrieving cars
 
 components:
   schemas:
@@ -140,6 +142,62 @@ components:
         message:
           type: string
           example: Invalid credentials
+    Location:
+      type: object
+      properties:
+        name: { type: string, example: "Praga District" }
+        building: { type: string, example: "25" }
+        city: { type: string, example: "Warsaw" }
+        street: { type: string, example: "Targowa" }
+        postalCode: { type: string, example: "03-734" }
+    Car:
+      type: object
+      properties:
+        id:
+          {
+            type: string,
+            format: uuid,
+            example: "139652ed-a207-4d3a-a71a-c8ef752a53f6",
+          }
+        color: { type: string, example: "silver" }
+        licensePlateNumber: { type: string, example: "WA01234" }
+        currentMileage: { type: integer, example: 6000 }
+        isAvailable: { type: boolean, example: true }
+        location: { $ref: "#/components/schemas/Location" }
+        make: { type: string, example: "Audi" }
+        model: { type: string, example: "A4" }
+        year: { type: integer, example: 2023 }
+        bagCapacity: { type: integer, example: 2 }
+        doors: { type: integer, example: 4 }
+        fuelType: { type: string, example: "petrol" }
+        hasAC: { type: boolean, example: true }
+        seats: { type: integer, example: 5 }
+        suitcaseCapacity: { type: integer, example: 2 }
+        transmissionType: { type: string, example: "manual" }
+        category: { type: string, example: "premium" }
+        createdAt:
+          {
+            type: string,
+            format: date-time,
+            example: "2025-09-21T09:02:44.340872+00:00",
+          }
+        updatedAt:
+          {
+            type: string,
+            format: date-time,
+            example: "2025-09-21T09:02:44.340872+00:00",
+          }
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+    Pagination:
+      type: object
+      properties:
+        total: { type: integer, example: 10 }
+        page: { type: integer, example: 4 }
+        pageSize: { type: integer, example: 3 }
 
 paths:
   /api/auth/register:
@@ -318,6 +376,138 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedException"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /api/cars:
+    get:
+      tags: [Cars]
+      summary: Get a paginated list of cars
+      description:
+        Returns an array of cars and pagination information. Supports filtering
+        by several attributes.
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-based)
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: pageSize
+          in: query
+          description: Number of cars per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+        - name: make
+          in: query
+          description: Filter by car make (e.g. Toyota, Ford)
+          required: false
+          schema:
+            type: string
+        - name: model
+          in: query
+          description: Filter by car model
+          required: false
+          schema:
+            type: string
+        - name: seats
+          in: query
+          description: Filter by number of seats
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: fuelType
+          in: query
+          description: Filter by fuel type (e.g. petrol, diesel, electric)
+          required: false
+          schema:
+            type: string
+        - name: smallBags
+          in: query
+          description: Filter by minimum number of small bag capacity
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: largeBags
+          in: query
+          description: Filter by minimum number of large bag capacity
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: category
+          in: query
+          description: Filter by car category (e.g. SUV, Sedan)
+          required: false
+          schema:
+            type: string
+        - name: transmissionType
+          in: query
+          description: Filter by transmission type (e.g. Automatic, Manual)
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A paginated list of cars
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cars:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Car"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /api/cars/{id}:
+    get:
+      tags: [Cars]
+      summary: Get a single car by its ID
+      description: Retrieve detailed information about one car.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID of the car to retrieve
+          schema:
+            type: string
+            format: uuid
+            example: "094356c6-7678-4ae9-b213-cd1cb5bb786d"
+      responses:
+        "200":
+          description: Car details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  car:
+                    $ref: "#/components/schemas/Car"
+        "404":
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundException"
         "500":
           description: Internal Server Error
           content:

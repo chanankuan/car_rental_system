@@ -17,6 +17,7 @@ import { authRouter } from "./auth/index.js";
 import { usersRouter } from "./users/index.js";
 import { config } from "./config/index.js";
 import { Exception, NotFoundException } from "./utils/index.js";
+import { carsRouter } from "./cars/cars.router.js";
 
 export const app = express();
 
@@ -73,6 +74,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/cars", carsRouter);
 
 app.use((_, res, next) => {
   next(new NotFoundException("Route not found"));
