@@ -82,6 +82,11 @@ BEGIN
         ('completed'),
         ('cancelled');
 
+    -- Admin user
+    INSERT INTO users(first_name, last_name, email, phone_number, password, is_verified, role_id)
+    VALUES
+        ('John', 'Doe', 'johndoe@rental.com', '123-456-789', '$2b$10$CQCwch3LANKktIBdfni5UegMd13kJqxCU0sTBmIq9jXH4YwUwpDfm', true, roleAdminId);
+
     -- Locations (Warsaw)
     INSERT INTO locations(id, name, street, building_number, postal_code, city)
     VALUES
@@ -90,7 +95,7 @@ BEGIN
         (locPragaId, 'Praga District', 'Targowa', '25', '03-734', 'Warsaw');
 
     -- Car models
-    INSERT INTO car_models(id, make, model, year, doors, has_ac, seats, suitcase_capacity, bag_capacity, transmission_id, category_id, fuel_type_id)
+    INSERT INTO car_models(id, make, model, year, doors, has_ac, seats, large_bags, small_bags, transmission_id, category_id, fuel_type_id)
     VALUES
         (modelToyotaCorollaId, 'Toyota', 'Corolla', 2023, 4, TRUE, 5, 2, 2, transAutoId, catEconomyId, fuelPetrolId),
         (modelFordFocusId, 'Ford', 'Focus', 2022, 4, TRUE, 5, 2, 2, transManualId, catEconomyId, fuelDieselId),

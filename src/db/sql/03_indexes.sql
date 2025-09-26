@@ -16,20 +16,20 @@ CREATE INDEX idx_rentals_status_id ON rentals(status_id);
 -- rentals.planned_pickup_location_id
 CREATE INDEX idx_rentals_planned_pickup_location_id ON rentals(planned_pickup_location_id);
 
--- rentals.planned_dropoff_location_id
-CREATE INDEX idx_rentals_planned_dropoff_location_id ON rentals(planned_dropoff_location_id);
+-- rentals.planned_return_location_id
+CREATE INDEX idx_rentals_planned_return_location_id ON rentals(planned_return_location_id);
 
--- rentals.actual_dropoff_location_id
-CREATE INDEX idx_rentals_actual_dropoff_location_id ON rentals(actual_dropoff_location_id);
+-- rentals.actual_return_location_id
+CREATE INDEX idx_rentals_actual_return_location_id ON rentals(actual_return_location_id);
 
 -- rentals.planned_pickup_date
 CREATE INDEX idx_rentals_planned_pickup_date ON rentals(planned_pickup_date);
 
--- rentals.planned_dropoff_date
-CREATE INDEX idx_rentals_planned_dropoff_date ON rentals(planned_dropoff_date);
+-- rentals.planned_return_date
+CREATE INDEX idx_rentals_planned_return_date ON rentals(planned_return_date);
 
--- rentals.actual_dropoff_date
-CREATE INDEX idx_rentals_actual_dropoff_date ON rentals(actual_dropoff_date);
+-- rentals.actual_return_date
+CREATE INDEX idx_rentals_actual_return_date ON rentals(actual_return_date);
 
 -- payments.payment_type_id
 CREATE INDEX idx_payments_payment_type_id ON payments(payment_type_id);

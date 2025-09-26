@@ -103,14 +103,14 @@ CREATE TABLE IF NOT EXISTS user_identifications (
 CREATE TABLE IF NOT EXISTS rentals (
     id                          UUID        NOT NULL DEFAULT uuid_generate_v4(),
     planned_pickup_date         TIMESTAMPTZ NOT NULL,
-    planned_dropoff_date        TIMESTAMPTZ NOT NULL,
-    actual_dropoff_date         TIMESTAMPTZ,
+    planned_return_date         TIMESTAMPTZ NOT NULL,
+    actual_return_date          TIMESTAMPTZ,
     user_identification_id      UUID        NOT NULL,
     status_id                   UUID        NOT NULL,
     car_id                      UUID        NOT NULL,
     planned_pickup_location_id  UUID        NOT NULL,
-    planned_dropoff_location_id UUID        NOT NULL,
-    actual_dropoff_location_id  UUID,
+    planned_return_location_id  UUID        NOT NULL,
+    actual_return_location_id   UUID,
     created_at                  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at                  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT pk_rentals PRIMARY KEY (id)
@@ -143,8 +143,8 @@ CREATE TABLE IF NOT EXISTS car_models (
     doors             SMALLINT      NOT NULL,
     has_ac            BOOLEAN       NOT NULL,
     seats             SMALLINT      NOT NULL,
-    suitcase_capacity SMALLINT      NOT NULL,
-    bag_capacity      SMALLINT      NOT NULL,
+    large_bags        SMALLINT      NOT NULL,
+    small_bags        SMALLINT      NOT NULL,
     transmission_id   UUID          NOT NULL,
     category_id       UUID          NOT NULL,
     fuel_type_id      UUID          NOT NULL,
@@ -189,17 +189,17 @@ ALTER TABLE price_tiers
     ADD CONSTRAINT fk_price_tiers_car_id
         FOREIGN KEY (car_id) REFERENCES cars (id);
 
--- Reference: fk_rentals_actual_dropoff_location_id (table: rentals)
---            fk_rentals_planned_dropoff_location_id (table: rentals)
+-- Reference: fk_rentals_actual_return_location_id (table: rentals)
+--            fk_rentals_planned_return_location_id (table: rentals)
 --            fk_rentals_planned_pickup_location_id (table: rentals)
 --            fk_rentals_status_id (table: rentals)
 --            fk_rentals_user_identification_id (table: rentals)
 --            fk_rentals_car_id (table: rentals)
 ALTER TABLE rentals
-    ADD CONSTRAINT fk_rentals_actual_dropoff_location_id
-        FOREIGN KEY (actual_dropoff_location_id) REFERENCES locations (id),
-    ADD CONSTRAINT fk_rentals_planned_dropoff_location_id
-        FOREIGN KEY (planned_dropoff_location_id) REFERENCES locations (id),
+    ADD CONSTRAINT fk_rentals_actual_return_location_id
+        FOREIGN KEY (actual_return_location_id) REFERENCES locations (id),
+    ADD CONSTRAINT fk_rentals_planned_return_location_id
+        FOREIGN KEY (planned_return_location_id) REFERENCES locations (id),
     ADD CONSTRAINT fk_rentals_planned_pickup_location_id
         FOREIGN KEY (planned_pickup_location_id) REFERENCES locations (id),
     ADD CONSTRAINT fk_rentals_status_id
