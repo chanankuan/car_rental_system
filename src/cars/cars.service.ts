@@ -1,6 +1,6 @@
 import { db } from "../db/db.js";
 import type { CarRow, FilterDefinition } from "../types.js";
-import { buildWhereClause } from "../utils/buildWhereClause.js";
+import { buildWhereClause } from "../utils/index.js";
 import type { FilterParams } from "./types.js";
 
 async function getCars(filterParams: FilterParams) {
