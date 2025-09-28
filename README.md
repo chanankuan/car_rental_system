@@ -7,6 +7,7 @@
 - [Database Schema](#database-schema)
 - [Setup & Installation](#setup--installation)
 - [API Documentation](#api-documentation)
+- [Testing](#testing)
 
 ## Overview
 
@@ -168,3 +169,18 @@ detailed responses:
   - `400 Bad Request` – Validation failed
   - `409 Conflict` – Email or phone number already in use
   - `500 Internal Server Error` – Server error
+
+## Testing
+
+To run the test suite locally:
+
+1. Ensure all dependencies are installed and required services (like the
+   database and Redis) are running if needed.
+2. From the project root, execute:
+
+```bash
+npm test
+```
+
+This will run all automated tests defined in the project to verify functionality
+and prevent regressions.
