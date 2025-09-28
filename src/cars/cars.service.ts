@@ -5,7 +5,7 @@ import type { FilterParams } from "./types.js";
 
 async function getCars(filterParams: FilterParams) {
   const page = Number(filterParams.page ?? 1);
-  const pageSize = Number(filterParams.pageSize ?? 5);
+  const pageSize = Number(filterParams.pageSize ?? 10);
 
   const offset = (page - 1) * pageSize;
 
