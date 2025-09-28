@@ -1,6 +1,6 @@
 import { db } from "../db/db.js";
 import type { CarRow, FilterDefinition } from "../types.js";
-import { buildWhereClause } from "../utils/index.js";
+import { buildWhereClause, NotFoundException } from "../utils/index.js";
 import type { FilterParams } from "./types.js";
 
 async function getCars(filterParams: FilterParams) {
@@ -105,7 +105,9 @@ async function getCarById(carId: string) {
     [carId]
   );
 
-  console.log(car);
+  if (!car) {
+    throw new NotFoundException("Car not found");
+  }
 
   return car;
 }

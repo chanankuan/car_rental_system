@@ -1,7 +1,7 @@
 import express from "express";
 
 import { carsController } from "./cars.controller.js";
-import { authorizeRoles, isAuthenticated } from "../middleware/index.js";
+import { isAuthenticated } from "../middleware/index.js";
 
 export const carsRouter = express.Router();
 
