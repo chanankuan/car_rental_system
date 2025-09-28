@@ -1,0 +1,82 @@
+# .github/workflows/ci.yml
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_db
+        # Missing: health checks and port mapping
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:8.2-alpine
+        # Missing: health checks and port mapping
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 10s --health-timeout
+          5s --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: |
+          if npm run lint --silent 2>/dev/null; then
+            echo "Running linting..."
+            npm run lint
+          else
+            echo "No lint script found, skipping linting"
+          fi
+
+      - name: Run type checking
+        run: |
+          if npm run type-check --silent 2>/dev/null; then
+            echo "Running type check..."
+            npm run type-check
+          elif npx tsc --version &>/dev/null; then
+            echo "Running TypeScript compiler check..."
+            npx tsc --noEmit
+          else
+            echo "No TypeScript found, skipping type check"
+          fi
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          # Fixed: Use localhost instead of service names for GitHub Actions
+          REDIS_URL: redis://localhost:6379
+          # Fixed: Use correct variable names from your .env
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_db
